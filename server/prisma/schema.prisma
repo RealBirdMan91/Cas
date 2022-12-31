@@ -16,18 +16,18 @@ model Employee {
   lastName  String
   email     String
   password  String
-  role      Roles  @relation(fields: [rolesId], references: [id])
-  rolesId   String
+  role      Role   @relation(fields: [roleId], references: [id])
+  roleId   String
 }
 
-model Roles {
-  id               String             @id @default(uuid())
-  name             String
-  canCreateRegions RegionsPermissions @relation(fields: [createRegionsId], references: [id])
-  canCreateRoles   RolesPermissions   @relation(fields: [createRolesId], references: [id])
-  createRegionsId  String             @unique
-  createRolesId    String             @unique
-  Employee         Employee[]
+model Role {
+  id                  String            @id @default(uuid())
+  name                String            @unique
+  regionPermissions   RegionsPermissions @relation(fields: [regionPermissionsId], references: [id], onDelete: Cascade)
+  rolePermissions     RolesPermissions  @relation(fields: [rolePermissionsId], references: [id], onDelete: Cascade)
+  regionPermissionsId String            @unique
+  rolePermissionsId   String            @unique
+  Employee            Employee[]
 }
 
 model RegionsPermissions {
@@ -36,7 +36,7 @@ model RegionsPermissions {
   read   Boolean
   update Boolean
   delete Boolean
-  role   Roles?
+  role   Role?
 }
 
 model RolesPermissions {
@@ -45,5 +45,5 @@ model RolesPermissions {
   read   Boolean
   update Boolean
   delete Boolean
-  role   Roles?
+  role   Role?
 }

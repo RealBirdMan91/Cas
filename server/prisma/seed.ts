@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function seed() {
-  //await prisma.roles.deleteMany();
+  await prisma.roles.deleteMany();
 
   const roleOne = await prisma.roles.create({
     data: {
