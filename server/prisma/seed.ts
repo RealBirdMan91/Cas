@@ -2,20 +2,34 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function seed() {
-  await prisma.roles.deleteMany();
+  await prisma.role.deleteMany();
 
-  const roleOne = await prisma.roles.create({
+  const roleOne = await prisma.role.create({
     data: {
-      name: "Bob",
-      canCreateRoles: {
+      name: "Admin",
+      regionPermissions: {
         create: {
           create: true,
           read: true,
           update: true,
-          delete: false,
+          delete: true,
         },
       },
-      canCreateRegions: {
+      rolePermissions: {
+        create: {
+          create: true,
+          read: true,
+          update: true,
+          delete: true,
+        },
+      },
+    },
+  });
+
+  const roleTwo = await prisma.role.create({
+    data: {
+      name: "Employee",
+      regionPermissions: {
         create: {
           create: false,
           read: true,
@@ -23,39 +37,25 @@ async function seed() {
           delete: false,
         },
       },
-    },
-  });
-
-  const roleTwo = await prisma.roles.create({
-    data: {
-      name: "Mikel",
-      canCreateRoles: {
+      rolePermissions: {
         create: {
           create: false,
           read: false,
-          update: true,
-          delete: true,
-        },
-      },
-      canCreateRegions: {
-        create: {
-          create: false,
-          read: true,
-          update: true,
+          update: false,
           delete: false,
         },
       },
     },
   });
 
- const roles = await prisma.roles.findMany({
+  const roles = await prisma.role.findMany({
     include: {
-        canCreateRegions: true, 
-        canCreateRoles: true
-    }
- })
+      regionPermissions: true,
+      rolePermissions: true
+    },
+  });
 
- console.log(roles)
+  console.log(roles);
 }
 
 seed();
